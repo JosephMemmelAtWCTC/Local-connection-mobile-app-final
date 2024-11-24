@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.title});
@@ -22,6 +23,8 @@ class _ProfilePageState extends State<ProfilePage> {
   int _counter = 0;
   // List<bool> _selections = List.generate(2, (_) => false);
   final List<bool> _selections = [false, true];
+
+  final Uri _githubUrl = Uri.parse('https://github.com');
 
   void _incrementCounter() {
     setState(() {
@@ -139,10 +142,22 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   Column(
                     children: [
-                      Icon(Icons.logout, color: Colors.green[500]),
-                      const Text('Logout'),
+                      IconButton(icon: const Icon(Icons.commit), color: Colors.green[500], onPressed: () async {
+                        if (await canLaunchUrl(_githubUrl)) {
+                          await launchUrl(_githubUrl);
+                        } else {
+                          throw 'Could not launch $_githubUrl';
+                        }
+                      }),
+                      const Text('Github'),
                     ],
                   ),
+                  // Column(
+                  //   children: [
+                  //     Icon(Icons.logout, color: Colors.green[500]),
+                  //     const Text('Logout'),
+                  //   ],
+                  // ),
                 ],
               ),
             ),
