@@ -37,6 +37,14 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  // final response = await http.get('url');
+  // if (response.statusCode == 200) {
+  // //display UI}
+  // else {
+  // //Show Error Message
+  // }
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +83,28 @@ class _ProfilePageState extends State<ProfilePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter your email',
+              ),
+            ),
+            const TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Enter your password',
+              ),
+              obscureText: true,
+              enableSuggestions: false,
+              autocorrect: false,
+            ),
+            TextButton(
+              style: const ButtonStyle(
+              ),
+              onPressed: () { },
+              child: const Text('Login'),
+            ),
+
             const Image(
               // image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
               image: NetworkImage('https://picsum.photos/200'),

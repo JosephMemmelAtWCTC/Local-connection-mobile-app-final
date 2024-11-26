@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:local_connection_first/MyHomePage.dart';
 import 'package:local_connection_first/ProfilePage.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-/// Flutter code sample for [NavigationBar].
+import 'package:http/http.dart' as http;
 
 void main() => runApp(const NavigationBarApp());
 
@@ -28,6 +27,8 @@ class NavigationExample extends StatefulWidget {
 
 class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
+
+
 
   @override
   Widget build(BuildContext context) {
