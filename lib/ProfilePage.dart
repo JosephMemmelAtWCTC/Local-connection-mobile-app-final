@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:local_connection_first/helpers/NetworkRequestsHelper.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.title});
@@ -101,7 +102,9 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton(
               style: const ButtonStyle(
               ),
-              onPressed: () { },
+              onPressed: () async {
+                NetworkRequestsHelper.postData("http://localhost:5177/identity/login");
+              },
               child: const Text('Login'),
             ),
 

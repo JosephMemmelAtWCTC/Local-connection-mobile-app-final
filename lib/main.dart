@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:local_connection_first/MyHomePage.dart';
 import 'package:local_connection_first/ProfilePage.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 
 void main() => runApp(const NavigationBarApp());
 
