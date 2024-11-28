@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_connection_first/ProfilePage.dart';
+import 'package:local_connection_first/helpers/ResourcesSystem.dart';
+import 'package:local_connection_first/singletons/AppData.dart';
 
 void main() => runApp(const NavigationBarApp());
 
@@ -11,13 +13,13 @@ class NavigationBarApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(useMaterial3: true),
       home: const NavigationExample(),
+
     );
   }
 }
 
 class NavigationExample extends StatefulWidget {
   const NavigationExample({super.key});
-
   @override
   State<NavigationExample> createState() => _NavigationExampleState();
 }
@@ -26,6 +28,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
 
 
+  ResourcesSystem _resourceSystem = new ResourcesSystem();
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +126,7 @@ class _NavigationExampleState extends State<NavigationExample> {
             );
           },
         ),
-        /// Home page
+        /// Profile page
           const ProfilePage(title: "Title")
       ][currentPageIndex],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:local_connection_first/helpers/NetworkRequestsHelper.dart';
+import 'package:local_connection_first/singletons/AppData.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.title});
@@ -22,8 +23,11 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   int _counter = 0;
-  // List<bool> _selections = List.generate(2, (_) => false);
-  final List<bool> _selections = [false, true];
+
+  // [User Input States]
+  final List<bool> _selections = [false, true];  // List<bool> _selections = List.generate(2, (_) => false);
+  String _username = "", _password = "";
+
 
   final Uri _githubUrl = Uri.parse('https://github.com');
 
@@ -84,34 +88,63 @@ class _ProfilePageState extends State<ProfilePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter your email',
-              ),
+            // TODO: Get it working with svg
+            Image(
+              // image: NetworkImage('https://api.dicebear.com/9.x/shapes/svg')
+              image: AppData().loggedInUser.profileImage != null
+                  ? NetworkImage(AppData().loggedInUser.profileImage ?? "")
+                  : const AssetImage('assets/images/unknown-person-icon-question-mark.jpg'),
             ),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter your password',
-              ),
-              obscureText: true,
-              enableSuggestions: false,
-              autocorrect: false,
-            ),
-            TextButton(
-              style: const ButtonStyle(
-              ),
-              onPressed: () async {
-                NetworkRequestsHelper.postData("http://localhost:5177/identity/login");
-              },
-              child: const Text('Login'),
-            ),
+            if(!AppData().loggedInUser.isLoggedIn)
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
 
-            const Image(
-              // image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
-              image: NetworkImage('https://picsum.photos/200'),
-            ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter your email',
+                      ),
+                      onChanged: (value){
+                        _username = value;
+                      }
+                    ),
+                    TextField(
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Enter your password',
+                      ),
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      onChanged: (value){
+                        _password = value;
+                      }
+                    ),
+                    TextButton(
+                      style: const ButtonStyle(
+                      ),
+                      onPressed: () async {
+                        final success = await AppData().loggedInUser.login(_username, _password);
+                        if (success) {
+                          setState(() {});
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                                Text('Login failed.'),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('Login'),
+                    ),
+                  ],
+                ),
+              ),
+
             const Text(
               'Profile2',
             ),
@@ -152,7 +185,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ]
 
-             ),
+            ),
             const Text(
               'About Us'
             ),
