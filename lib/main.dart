@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_connection_first/ProfilePage.dart';
+import 'package:local_connection_first/MapMainPage.dart';
 import 'package:local_connection_first/helpers/ResourcesSystem.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
 
@@ -44,8 +45,8 @@ class _NavigationExampleState extends State<NavigationExample> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            icon: Badge(child: Icon(Icons.notifications_sharp)),
-            label: 'Notifications',
+            icon: Badge(child: Icon(Icons.map)),
+            label: 'Local',
           ),
           NavigationDestination(
             icon: Badge(
@@ -62,28 +63,29 @@ class _NavigationExampleState extends State<NavigationExample> {
         ],
       ),
       body: <Widget>[
+        const MapMainPage(title: "Title"),
         /// Notifications page
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 1'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-              Card(
-                child: ListTile(
-                  leading: Icon(Icons.notifications_sharp),
-                  title: Text('Notification 2'),
-                  subtitle: Text('This is a notification'),
-                ),
-              ),
-            ],
-          ),
-        ),
+        // const Padding(
+        //   padding: EdgeInsets.all(8.0),
+        //   child: Column(
+        //     children: <Widget>[
+        //       Card(
+        //         child: ListTile(
+        //           leading: Icon(Icons.notifications_sharp),
+        //           title: Text('Notification 1'),
+        //           subtitle: Text('This is a notification'),
+        //         ),
+        //       ),
+        //       Card(
+        //         child: ListTile(
+        //           leading: Icon(Icons.notifications_sharp),
+        //           title: Text('Notification 2'),
+        //           subtitle: Text('This is a notification'),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
 
         /// Messages page
         ListView.builder(
