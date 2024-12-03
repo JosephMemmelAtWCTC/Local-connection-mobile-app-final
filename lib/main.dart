@@ -28,8 +28,20 @@ class NavigationExample extends StatefulWidget {
 class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
 
-
   ResourcesSystem _resourceSystem = new ResourcesSystem();
+
+  @override
+  void initState() {
+    super.initState();
+
+    AppData().updateUserLocation().then((_) {
+      // Code to execute after the location is updated
+      print('Location updated successfully!');
+    }).catchError((error) {
+      // Handle errors here
+      print('Error updating location: $error');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

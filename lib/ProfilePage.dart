@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -209,11 +209,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   Column(
                     children: [
                       IconButton(icon: const Icon(Icons.commit), color: Colors.green[500], onPressed: () async {
-                        if (await canLaunchUrl(_githubUrl)) {
-                          await launchUrl(_githubUrl);
-                        } else {
-                          throw 'Could not launch $_githubUrl';
-                        }
+                        // if (await canLaunchUrl(_githubUrl)) {
+                        //   await launchUrl(_githubUrl);
+                        // } else {
+                        //   throw 'Could not launch $_githubUrl';
+                        // }
                       }),
                       const Text('Github'),
                     ],

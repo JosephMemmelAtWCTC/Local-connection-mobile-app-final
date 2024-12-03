@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:url_launcher/url_launcher.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
+import 'package:local_connection_first/helpers/LocationHelper.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -26,27 +27,42 @@ class MapMainPage extends StatefulWidget {
 
 class _MapMainPageState extends State<MapMainPage> {
 
-  LatLng? _currentUserLocation;
+  double _currentSliderValue = 10;
+  final MapController _mapController = MapController();
 
   @override
   void initState() {
     super.initState();
-    _getUserCurrentLocation();
-  }
+    AppData().updateUserLocation().then((Position position) {
+      setState(() {
 
-  Future<void> _getUserCurrentLocation() async {
-    final position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-    setState(() {
-      _currentUserLocation = LatLng(position.latitude, position.longitude);
-      print("position.latitude, position.longitude = ${position.latitude} ${position.longitude}");
+      });
+
+      _moveMapToCurrentLocation();
+      // print("position.longitude__"+position.longitude.toString());
+    }).catchError((error) {
+      // print("Error updating location: $error");
     });
   }
+
+  // Future<void> _getUserCurrentLocation() async {
+  //   final position = await Geolocator.getCurrentPosition(
+  //     desiredAccuracy: LocationAccuracy.high,
+  //   );
+  //   setState(() {
+  //     AppData().currentUserPosition = LatLng(position.latitude, position.longitude) as Position;
+  //     // print("position.latitude, position.longitude = ${position.latitude} ${position.longitude}");
+  //     print("AppData().currentUserPosition_"+AppData().currentUserPosition.longitude.toString());
+  //   });
+  // }
 
 
   // [User Input States]
 
+  Future<void> _moveMapToCurrentLocation() async {
+    await Future.delayed(Duration(milliseconds: 500)); // Wait a bit for widget to render
+    _mapController.move(new LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,21 +82,56 @@ class _MapMainPageState extends State<MapMainPage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Stack(
-        children: [
-          FlutterMap(
-            options: MapOptions(
-              initialCenter: _currentUserLocation?? const LatLng(0,0),
-              initialZoom: 3.2,
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.app',
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: FlutterMap(
+                mapController: _mapController,
+                options: MapOptions(
+                  initialCenter: new LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude)?? const LatLng(0,0),
+                  initialZoom: _currentSliderValue,
+                  onPositionChanged: (MapCamera position, bool hasGesture) {
+                    if (hasGesture) {
+                      // setState(
+                      //       () => _c = CenterOnLocationUpdate.never,
+                      // );
+                    }
+                  },
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    userAgentPackageName: 'com.example.app',
+                  ),
+                  // Builder(
+                  //   builder: (context) {
+                  //     if (MapCamera.of(context).zoom < 13) return SizedBox.shrink();
+                  //     return TileLayer();
+                  //   },
+                  // ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+            SizedBox( // Set a fixed height for the slider
+              height: 50,  // Adjust height as needed
+              child: Slider(
+                value: _currentSliderValue,
+                min: 6,
+                max: 20,
+                divisions: 7,
+                label: _currentSliderValue.round().toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    _currentSliderValue = value;
+                    _mapController.move(new LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
