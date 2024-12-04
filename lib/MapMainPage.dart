@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
-import 'package:local_connection_first/helpers/LocationHelper.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
@@ -61,7 +59,7 @@ class _MapMainPageState extends State<MapMainPage> {
 
   Future<void> _moveMapToCurrentLocation() async {
     await Future.delayed(Duration(milliseconds: 500)); // Wait a bit for widget to render
-    _mapController.move(new LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+    _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
   }
 
   @override
@@ -90,7 +88,7 @@ class _MapMainPageState extends State<MapMainPage> {
               child: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  initialCenter: new LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude)?? const LatLng(0,0),
+                  initialCenter: LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude)?? const LatLng(0,0),
                   initialZoom: _currentSliderValue,
                   onPositionChanged: (MapCamera position, bool hasGesture) {
                     if (hasGesture) {
@@ -105,12 +103,16 @@ class _MapMainPageState extends State<MapMainPage> {
                     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.example.app',
                   ),
-                  // Builder(
-                  //   builder: (context) {
-                  //     if (MapCamera.of(context).zoom < 13) return SizedBox.shrink();
-                  //     return TileLayer();
-                  //   },
-                  // ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: AppData().currentLatLong,
+                        width: 80,
+                        height: 80,
+                        child: Icon(Icons.person_pin_circle, size: 24.0),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -120,12 +122,12 @@ class _MapMainPageState extends State<MapMainPage> {
                 value: _currentSliderValue,
                 min: 6,
                 max: 20,
-                divisions: 7,
+                divisions: 14,
                 label: _currentSliderValue.round().toString(),
                 onChanged: (double value) {
                   setState(() {
                     _currentSliderValue = value;
-                    _mapController.move(new LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+                    _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
                   });
                 },
               ),

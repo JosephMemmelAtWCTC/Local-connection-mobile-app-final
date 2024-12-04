@@ -1,14 +1,11 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:local_connection_first/Models/LoggedInUser.dart';
 
 class ResourcesSystem{
 
 
-  ResourcesSystem(){
-
-  }
+  ResourcesSystem();
 
 
   static Future<void> postData(String apiUrl) async {

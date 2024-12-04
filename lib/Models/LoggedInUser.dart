@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:local_connection_first/Models/User.dart';
 import 'package:local_connection_first/helpers/NetworkRequestsHelper.dart';
@@ -23,12 +22,12 @@ class LoggedInUser {
     final responseData = jsonDecode(response.body);
     if(response.statusCode == 200 || response.statusCode == 201){
       this.username = username;
-      this.isLoggedIn = true;
-      this.accessToken = responseData["accessToken"];
-      this.expiresIn = responseData["expiresIn"];
-      this.refreshToken = responseData["refreshToken"];
+      isLoggedIn = true;
+      accessToken = responseData["accessToken"];
+      expiresIn = responseData["expiresIn"];
+      refreshToken = responseData["refreshToken"];
 
-      this.profileImage = User(username).profileImgPath;
+      profileImage = User(username).profileImgPath;
       return true;
     }else{
       return false;

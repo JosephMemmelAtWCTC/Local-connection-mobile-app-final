@@ -1,6 +1,5 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:local_connection_first/helpers/NetworkRequestsHelper.dart';
 
 class NetworkRequestsHelper{
 

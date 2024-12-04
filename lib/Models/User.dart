@@ -3,7 +3,7 @@ class User {
   late String profileImgPath;
 
   User(this.username) {
-    profileImgPath = generateUserProfilePath(this.username);
+    profileImgPath = generateUserProfilePath(username);
   }
 
   static String generateUserProfilePath(seed){

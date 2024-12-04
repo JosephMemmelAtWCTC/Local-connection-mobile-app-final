@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key, required this.title});
