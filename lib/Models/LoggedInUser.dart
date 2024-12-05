@@ -15,7 +15,7 @@ class LoggedInUser {
   bool isLoggedIn = false;
 
   login(String username, String password) async {
-    Response response = await NetworkRequestsHelper.postData("http://localhost:5177/identity/login", bodyJson: {
+    Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/identity/login", bodyJson: {
       "email": username,
       "password": password
     });

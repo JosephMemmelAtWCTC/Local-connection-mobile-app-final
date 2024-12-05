@@ -41,6 +41,7 @@ class _MapMainPageState extends State<MapMainPage> {
     }).catchError((error) {
       // print("Error updating location: $error");
     });
+
   }
 
   // Future<void> _getUserCurrentLocation() async {
@@ -102,6 +103,16 @@ class _MapMainPageState extends State<MapMainPage> {
                   TileLayer(
                     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.example.app',
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      Marker(
+                        point: AppData().currentLatLong,
+                        width: 160,
+                        height: 160,
+                        child: Icon(Icons.person_pin_circle, size: 24.0),
+                      ),
+                    ],
                   ),
                   MarkerLayer(
                     markers: [

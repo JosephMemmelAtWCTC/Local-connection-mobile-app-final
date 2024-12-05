@@ -33,5 +33,19 @@ class NetworkRequestsHelper{
     }
   }
 
+  static Future<http.Response> getData(String apiUrl) async {
+    try {
+      final response = await http.get(
+          Uri.parse(apiUrl),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+      );
+      return response;
+    } catch (e) {
+      throw Exception('Failed to get data for request with the url "${apiUrl}" - ${e.toString()}');
+    }
+  }
+
 
 }

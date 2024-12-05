@@ -34,6 +34,16 @@ class _NavigationExampleState extends State<NavigationExample> {
   void initState() {
     super.initState();
 
+    print("before");
+    AppData().currentLocalLocations.then((locations) {
+      print("LocalLocationsLength: ${locations.length}");
+      // print("currentLocalLocations countA + ${locations}");
+    }).catchError((error) {
+      // Handle errors here
+      print('Error updating count: $error');
+    });
+    print("after");
+
     AppData().updateUserLocation().then((_) {
       // Code to execute after the location is updated
       print('Location updated successfully!');
