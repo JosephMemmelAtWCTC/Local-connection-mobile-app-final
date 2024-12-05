@@ -25,6 +25,8 @@ class AppData {
     speedAccuracy: 0,
   );
 
+  List<LocalLocation> cachedListLocalLocations = [];
+
   LatLng get currentLatLong => LatLng(currentUserPosition.latitude, currentUserPosition.longitude);
 
   Future<List<LocalLocation>> get currentLocalLocations async {
@@ -41,6 +43,7 @@ class AppData {
     // List<LocalLocation> listLocalLocations = (jsonDecode(response.body)).map((item) => LocalLocation.fromJson(item)).toList();
     List<LocalLocation> listLocalLocations = (jsonDecode(response.body) as List<dynamic>).map((item) => LocalLocation.fromJson(item as Map<String, dynamic>)).toList();
 
+    cachedListLocalLocations = listLocalLocations;
     return listLocalLocations;
   }
 

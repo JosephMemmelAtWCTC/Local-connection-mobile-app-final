@@ -1,9 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
+
+import 'Models/LocalLocation.dart';
 
 class MapMainPage extends StatefulWidget {
   const MapMainPage({super.key, required this.title});
@@ -44,22 +48,10 @@ class _MapMainPageState extends State<MapMainPage> {
 
   }
 
-  // Future<void> _getUserCurrentLocation() async {
-  //   final position = await Geolocator.getCurrentPosition(
-  //     desiredAccuracy: LocationAccuracy.high,
-  //   );
-  //   setState(() {
-  //     AppData().currentUserPosition = LatLng(position.latitude, position.longitude) as Position;
-  //     // print("position.latitude, position.longitude = ${position.latitude} ${position.longitude}");
-  //     print("AppData().currentUserPosition_"+AppData().currentUserPosition.longitude.toString());
-  //   });
-  // }
-
 
   // [User Input States]
 
   Future<void> _moveMapToCurrentLocation() async {
-    await Future.delayed(Duration(milliseconds: 500)); // Wait a bit for widget to render
     _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
   }
 
@@ -127,7 +119,26 @@ class _MapMainPageState extends State<MapMainPage> {
                 ],
               ),
             ),
-            SizedBox( // Set a fixed height for the slider
+            SizedBox(
+              child: Container(
+                // width: 200,
+                height: min(250, AppData().cachedListLocalLocations.length*110),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.blue,
+                    width: 3.0,
+                  ),
+                ),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(8),
+                  itemCount: AppData().cachedListLocalLocations.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    return Card.filled(child: _LocalLocationCard(localLocation: AppData().cachedListLocalLocations[i]));
+                  }
+                ),
+              ),
+            ),
+            SizedBox( // Fixed height for the slider
               height: 50,  // Adjust height as needed
               child: Slider(
                 value: _currentSliderValue,
@@ -145,6 +156,83 @@ class _MapMainPageState extends State<MapMainPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// class _LocalLocationCard extends StatelessWidget {
+//   const _LocalLocationCard({required this.cardName});
+//   final String cardName;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       height: 100,
+//       child: Center(child: Text(cardName)),
+//     );
+//   }
+// }
+class _LocalLocationCard extends StatelessWidget {
+  const _LocalLocationCard({required this.localLocation});
+  final LocalLocation localLocation;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[200], // Background color
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Column(
+              children: [
+                const Icon(Icons.home),
+                const Text(
+                  '1.1 miles',
+                  style: TextStyle(
+                    color: Colors.purple,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  localLocation.locationNickname,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
+                ),
+                Text(
+                  localLocation.description,
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                  ),
+                ),
+                const Text(
+                  '10:30am - 6:00pm',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

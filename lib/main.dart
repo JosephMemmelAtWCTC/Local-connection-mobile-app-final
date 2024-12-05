@@ -28,7 +28,6 @@ class NavigationExample extends StatefulWidget {
 class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
 
-  final ResourcesSystem _resourceSystem = ResourcesSystem();
 
   @override
   void initState() {
