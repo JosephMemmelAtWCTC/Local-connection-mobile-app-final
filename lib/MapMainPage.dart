@@ -32,6 +32,8 @@ class _MapMainPageState extends State<MapMainPage> {
   double _currentSliderValue = 10;
   final MapController _mapController = MapController();
 
+  LocalLocation? _selectedMarker;
+
   @override
   void initState() {
     super.initState();
@@ -107,15 +109,24 @@ class _MapMainPageState extends State<MapMainPage> {
                     ],
                   ),
                   MarkerLayer(
-                    markers: [
-                      Marker(
-                        point: AppData().currentLatLong,
-                        width: 80,
-                        height: 80,
-                        child: Icon(Icons.person_pin_circle, size: 24.0),
-                      ),
-                    ],
+                    markers: AppData().cachedListLocalLocations.map((localLocation) {
+                      return Marker(
+                        point: LatLng(localLocation.latitude, localLocation.longitude),
+                        width: 160,
+                        height: 160,
+                        child: IconButton(
+                          icon: const Icon(Icons.garage),
+                          color: _selectedMarker?.id == localLocation.id ? Colors.green : Colors.black,
+                          onPressed: () {
+                            setState(() {
+                              _selectedMarker = localLocation;
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
                   ),
+
                 ],
               ),
             ),
@@ -133,7 +144,26 @@ class _MapMainPageState extends State<MapMainPage> {
                   padding: const EdgeInsets.all(8),
                   itemCount: AppData().cachedListLocalLocations.length,
                   itemBuilder: (BuildContext context, int i) {
-                    return Card.filled(child: _LocalLocationCard(localLocation: AppData().cachedListLocalLocations[i]));
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _selectedMarker = AppData().cachedListLocalLocations[i];
+                        });
+                        print("_selectedMarker.id ${_selectedMarker?.id}");
+                      },
+                      child: Card.filled(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: _selectedMarker?.id == AppData().cachedListLocalLocations[i].id ? Colors.green : Colors.black, // Change this to your desired color
+                            width: 2.0,
+                          ),
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: GestureDetector(
+                          child: _LocalLocationCard(localLocation: AppData().cachedListLocalLocations[i]),
+                        ),
+                      )
+                    );
                   }
                 ),
               ),
@@ -182,7 +212,7 @@ class _LocalLocationCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
-        color: Colors.grey[200], // Background color
+        color: Colors.grey[200],
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Row(
@@ -224,6 +254,13 @@ class _LocalLocationCard extends StatelessWidget {
                 ),
                 const Text(
                   '10:30am - 6:00pm',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  "${localLocation.longitude} ${localLocation.latitude}",
                   style: TextStyle(
                     fontSize: 12.0,
                     color: Colors.grey,
