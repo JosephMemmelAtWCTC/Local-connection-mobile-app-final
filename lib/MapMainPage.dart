@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _MapMainPageState extends State<MapMainPage> {
 
   double _currentSliderValue = 8;
   final MapController _mapController = MapController();
+  late List<LocalLocation> _cachedListLocalLocations = [];
 
   LocalLocation? _selectedMarker;
 
@@ -39,15 +41,31 @@ class _MapMainPageState extends State<MapMainPage> {
   void initState() {
     super.initState();
     AppData().updateUserLocation().then((Position position) {
-      setState(() {
-
-      });
-
       _moveMapToCurrentLocation();
       // print("position.longitude__"+position.longitude.toString());
-    }).catchError((error) {
-      // print("Error updating location: $error");
+        setState(() {
+      });
     });
+    AppData().currentLocalLocations.then((List<LocalLocation> localLocations){
+      _cachedListLocalLocations = localLocations;
+      _cachedListLocalLocations.sort((a, b) {
+        final double distanceA = Geolocator.distanceBetween(
+            a.latitude,
+            a.longitude,
+            AppData().currentUserPosition.latitude,
+            AppData().currentUserPosition.longitude
+        );
+        final double distanceB = Geolocator.distanceBetween(
+            b.latitude,
+            b.longitude,
+            AppData().currentUserPosition.latitude,
+            AppData().currentUserPosition.longitude
+        );
+        return distanceA.compareTo(distanceB);
+      });
+
+      setState(() {});
+      } as FutureOr Function(List<LocalLocation> localLocations));
 
   }
 
@@ -114,7 +132,7 @@ class _MapMainPageState extends State<MapMainPage> {
                     ],
                   ),
                   MarkerLayer(
-                    markers: AppData().cachedListLocalLocations.map((localLocation) {
+                    markers: _cachedListLocalLocations.map((localLocation) {
                       return Marker(
                         point: LatLng(localLocation.latitude, localLocation.longitude),
                         width: 160,
@@ -140,7 +158,7 @@ class _MapMainPageState extends State<MapMainPage> {
             SizedBox(
               child: Container(
                 // width: 200,
-                height: min(250, AppData().cachedListLocalLocations.length*110),
+                height: min(250, _cachedListLocalLocations.length*100),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.blue,
@@ -149,37 +167,37 @@ class _MapMainPageState extends State<MapMainPage> {
                 ),
                 child: ListView.builder(
                   padding: const EdgeInsets.all(8),
-                  itemCount: AppData().cachedListLocalLocations.length,
+                  itemCount: _cachedListLocalLocations.length,
                   itemBuilder: (BuildContext context, int i) {
                     final double relativeDistance = Geolocator.distanceBetween(
-                      AppData().cachedListLocalLocations[i].latitude,
-                      AppData().cachedListLocalLocations[i].longitude,
+                      _cachedListLocalLocations[i].latitude,
+                      _cachedListLocalLocations[i].longitude,
                       AppData().currentUserPosition.latitude,
                       AppData().currentUserPosition.longitude
                     );
-                    AppData().cachedListLocalLocations.sort((a, b) => relativeDistance.compareTo(relativeDistance));
+                    _cachedListLocalLocations.sort((a, b) => relativeDistance.compareTo(relativeDistance));
 
 
 
                     return GestureDetector(
                       onTap: () {
                         setState(() {
-                          _selectedMarker = AppData().cachedListLocalLocations[i];
-                          _currentSliderValue = 18;
-                          _mapController.move(LatLng(AppData().cachedListLocalLocations[i].latitude, AppData().cachedListLocalLocations[i].longitude), _currentSliderValue);
+                          _selectedMarker = _cachedListLocalLocations[i];
+                          // _currentSliderValue = 18;
+                          _mapController.move(LatLng(_cachedListLocalLocations[i].latitude, _cachedListLocalLocations[i].longitude), _currentSliderValue);
                         });
                         print("_selectedMarker.id ${_selectedMarker?.id}");
                       },
                       child: Card.filled(
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
-                            color: _selectedMarker?.id == AppData().cachedListLocalLocations[i].id ? Colors.green : Colors.black, // Change this to your desired color
+                            color: _selectedMarker?.id == _cachedListLocalLocations[i].id ? Colors.green : Colors.black, // Change this to your desired color
                             width: 2.0,
                           ),
                           borderRadius: BorderRadius.circular(4.0),
                         ),
                         child: GestureDetector(
-                          child: _LocalLocationCard(localLocation: AppData().cachedListLocalLocations[i]),
+                          child: _LocalLocationCard(localLocation: _cachedListLocalLocations[i]),
                         ),
                       )
                     );
@@ -210,18 +228,6 @@ class _MapMainPageState extends State<MapMainPage> {
   }
 }
 
-// class _LocalLocationCard extends StatelessWidget {
-//   const _LocalLocationCard({required this.cardName});
-//   final String cardName;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       height: 100,
-//       child: Center(child: Text(cardName)),
-//     );
-//   }
-// }
 class _LocalLocationCard extends StatelessWidget {
   const _LocalLocationCard({required this.localLocation});
   final LocalLocation localLocation;
@@ -244,7 +250,7 @@ class _LocalLocationCard extends StatelessWidget {
               children: [
                 Icon(LocationLabel.toEnum(localLocation.localLabelStrings.first).icon),
                 Text(
-                  "${distanceInMiles.toStringAsFixed(distanceInMiles>1 ? 1 : 2)} miles",
+                  "${distanceInMiles.toStringAsFixed(distanceInMiles>1 ? 1 : 5)} miles",
                   style: TextStyle(
                     color: Colors.purple,
                     fontWeight: FontWeight.bold,

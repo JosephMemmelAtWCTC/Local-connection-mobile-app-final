@@ -60,7 +60,11 @@ class _NavigationExampleState extends State<NavigationExample> {
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
           if(index == 0){
-            // !!!!!!!!!!!!!!!NAV
+            AppData().currentLocalLocations.then((locations) {
+              setState(() {
+              });
+            }).catchError((error) {
+            });
           }
           setState(() {
             currentPageIndex = index;
