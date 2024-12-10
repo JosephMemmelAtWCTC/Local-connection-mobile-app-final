@@ -21,33 +21,10 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  int _counter = 0;
 
   // [User Input States]
   final List<bool> _selections = [false, true];  // List<bool> _selections = List.generate(2, (_) => false);
   String _username = "", _password = "";
-
-
-  final Uri _githubUrl = Uri.parse('https://github.com');
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  // final response = await http.get('url');
-  // if (response.statusCode == 200) {
-  // //display UI}
-  // else {
-  // //Show Error Message
-  // }
-  // }
 
 
   @override
@@ -89,6 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             // TODO: Get it working with svg
             Image(
+              height: 100,
               // image: NetworkImage('https://api.dicebear.com/9.x/shapes/svg')
               image: AppData().loggedInUser.profileImage != null
                   ? NetworkImage(AppData().loggedInUser.profileImage ?? "")
@@ -144,46 +122,54 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-            const Text(
-              'Profile2',
-            ),
-            const Text(
-              'Profile2',
-            ),
-            const Text(
-              'Location Accuracy',
-            ),
-            ToggleButtons(
-                isSelected: _selections,
-                selectedColor: Colors.primaries.first,
-                fillColor: Colors.primaries.last,
-                onPressed: (int index) {
-                  setState(() {
-                    _selections[0] = !_selections[0];
-                    _selections[1] = !_selections[1];
-                  });
-                },
-                borderRadius: BorderRadius.circular(30),
-                borderWidth: 2,
-                borderColor: Colors.primaries.first,
-                selectedBorderColor: Colors.primaries.first,
-                children: const [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.my_location),
-                      Text('High'),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.location_searching),
-                      Text('Low'),
-                    ],
-                  ),
-                ]
-
+            if(AppData().loggedInUser.isLoggedIn)
+              Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      AppData().loggedInUser.username ?? "ERROR",
+                    ),
+                    const Text(
+                      'Profile2',
+                    ),
+                    const Text(
+                      'Location Accuracy',
+                    ),
+                    ToggleButtons(
+                        isSelected: _selections,
+                        selectedColor: Colors.primaries.first,
+                        fillColor: Colors.primaries.last,
+                        onPressed: (int index) {
+                          setState(() {
+                            _selections[0] = !_selections[0];
+                            _selections[1] = !_selections[1];
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(30),
+                        borderWidth: 2,
+                        borderColor: Colors.primaries.first,
+                        selectedBorderColor: Colors.primaries.first,
+                        children: const [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.my_location),
+                              Text('High'),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.location_searching),
+                              Text('Low'),
+                            ],
+                          ),
+                        ]
+                      ),
+                  ]
+              ),
             ),
             const Text(
               'About Us'

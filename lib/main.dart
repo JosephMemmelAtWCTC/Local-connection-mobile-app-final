@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_connection_first/ProfilePage.dart';
 import 'package:local_connection_first/MapMainPage.dart';
+import 'package:local_connection_first/ManagePage.dart';
 import 'package:local_connection_first/helpers/ResourcesSystem.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
 
@@ -64,12 +65,12 @@ class _NavigationExampleState extends State<NavigationExample> {
         },
         indicatorColor: Colors.amber,
         selectedIndex: currentPageIndex,
-        destinations: const <Widget>[
-          NavigationDestination(
+        destinations: <Widget>[
+          const NavigationDestination(
             icon: Badge(child: Icon(Icons.map)),
             label: 'Local',
           ),
-          NavigationDestination(
+          const NavigationDestination(
             icon: Badge(
               label: Text('2'),
               child: Icon(Icons.messenger_sharp),
@@ -77,9 +78,9 @@ class _NavigationExampleState extends State<NavigationExample> {
             label: 'Messages',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.perm_identity_outlined),
-            icon: Icon(Icons.perm_identity),
-            label: 'Profile',
+            selectedIcon: const Icon(Icons.perm_identity_outlined),
+            icon: const Icon(Icons.perm_identity),
+            label: AppData().loggedInUser.isLoggedIn ? "Login" : "Profile",
           ),
         ],
       ),
@@ -108,47 +109,49 @@ class _NavigationExampleState extends State<NavigationExample> {
         //   ),
         // ),
 
+        const ManagePage(title: "Title"),
+
         /// Messages page
-        ListView.builder(
-          reverse: true,
-          itemCount: 2,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == 0) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  padding: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: theme.colorScheme.primary,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Text(
-                    'Hello',
-                    style: theme.textTheme.bodyLarge!
-                        .copyWith(color: theme.colorScheme.onPrimary),
-                  ),
-                ),
-              );
-            }
-            return Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                margin: const EdgeInsets.all(8.0),
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  'Hi!',
-                  style: theme.textTheme.bodyLarge!
-                      .copyWith(color: theme.colorScheme.onPrimary),
-                ),
-              ),
-            );
-          },
-        ),
+        // ListView.builder(
+        //   reverse: true,
+        //   itemCount: 2,
+        //   itemBuilder: (BuildContext context, int index) {
+        //     if (index == 0) {
+        //       return Align(
+        //         alignment: Alignment.centerRight,
+        //         child: Container(
+        //           margin: const EdgeInsets.all(8.0),
+        //           padding: const EdgeInsets.all(8.0),
+        //           decoration: BoxDecoration(
+        //             color: theme.colorScheme.primary,
+        //             borderRadius: BorderRadius.circular(8.0),
+        //           ),
+        //           child: Text(
+        //             'Hello',
+        //             style: theme.textTheme.bodyLarge!
+        //                 .copyWith(color: theme.colorScheme.onPrimary),
+        //           ),
+        //         ),
+        //       );
+        //     }
+        //     return Align(
+        //       alignment: Alignment.centerLeft,
+        //       child: Container(
+        //         margin: const EdgeInsets.all(8.0),
+        //         padding: const EdgeInsets.all(8.0),
+        //         decoration: BoxDecoration(
+        //           color: theme.colorScheme.primary,
+        //           borderRadius: BorderRadius.circular(8.0),
+        //         ),
+        //         child: Text(
+        //           'Hi!',
+        //           style: theme.textTheme.bodyLarge!
+        //               .copyWith(color: theme.colorScheme.onPrimary),
+        //         ),
+        //       ),
+        //     );
+        //   },
+        // ),
         /// Profile page
           const ProfilePage(title: "Title")
       ][currentPageIndex],

@@ -29,7 +29,7 @@ class MapMainPage extends StatefulWidget {
 
 class _MapMainPageState extends State<MapMainPage> {
 
-  double _currentSliderValue = 10;
+  double _currentSliderValue = 8;
   final MapController _mapController = MapController();
 
   LocalLocation? _selectedMarker;
@@ -83,7 +83,7 @@ class _MapMainPageState extends State<MapMainPage> {
               child: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
-                  initialCenter: LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude)?? const LatLng(0,0),
+                  initialCenter: LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude),
                   initialZoom: _currentSliderValue,
                   onPositionChanged: (MapCamera position, bool hasGesture) {
                     if (hasGesture) {
@@ -92,6 +92,10 @@ class _MapMainPageState extends State<MapMainPage> {
                       // );
                     }
                   },
+                  interactionOptions: const InteractionOptions(
+                    enableMultiFingerGestureRace: false,
+                    // flags: (InteractiveFlag.pinchZoom | InteractiveFlag.drag),
+                  ),
                 ),
                 children: [
                   TileLayer(
@@ -168,8 +172,8 @@ class _MapMainPageState extends State<MapMainPage> {
                 ),
               ),
             ),
-            SizedBox( // Fixed height for the slider
-              height: 50,  // Adjust height as needed
+            SizedBox(
+              height: 50,
               child: Slider(
                 value: _currentSliderValue,
                 min: 6,
@@ -222,8 +226,8 @@ class _LocalLocationCard extends StatelessWidget {
             child: Column(
               children: [
                 const Icon(Icons.home),
-                const Text(
-                  '1.1 miles',
+                Text(
+                  "${(Geolocator.distanceBetween(localLocation.latitude, localLocation.longitude, AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude)/1609.344).toStringAsFixed(1)} miles",
                   style: TextStyle(
                     color: Colors.purple,
                     fontWeight: FontWeight.bold,
@@ -232,7 +236,6 @@ class _LocalLocationCard extends StatelessWidget {
               ],
             ),
           ),
-
           Expanded(
             flex: 2,
             child: Column(
@@ -260,7 +263,7 @@ class _LocalLocationCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "${localLocation.longitude} ${localLocation.latitude}",
+                  "${localLocation.latitude} ${localLocation.longitude}",
                   style: TextStyle(
                     fontSize: 12.0,
                     color: Colors.grey,
