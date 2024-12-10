@@ -59,6 +59,9 @@ class _NavigationExampleState extends State<NavigationExample> {
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
+          if(index == 0){
+            // !!!!!!!!!!!!!!!NAV
+          }
           setState(() {
             currentPageIndex = index;
           });
@@ -67,15 +70,17 @@ class _NavigationExampleState extends State<NavigationExample> {
         selectedIndex: currentPageIndex,
         destinations: <Widget>[
           const NavigationDestination(
-            icon: Badge(child: Icon(Icons.map)),
+            // icon: Badge(child: Icon(Icons.map)),
+            icon: const Icon(Icons.map),
             label: 'Local',
           ),
           const NavigationDestination(
-            icon: Badge(
-              label: Text('2'),
-              child: Icon(Icons.messenger_sharp),
-            ),
-            label: 'Messages',
+            // icon: Badge(
+              // label: Text('2'),
+              // child:
+            icon: const Icon(Icons.edit),
+            // ),
+            label: 'Post',
           ),
           NavigationDestination(
             selectedIcon: const Icon(Icons.perm_identity_outlined),

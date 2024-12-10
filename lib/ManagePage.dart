@@ -138,7 +138,7 @@ class _ManagePageState extends State<ManagePage> {
                         point: AppData().currentLatLong,
                         width: 160,
                         height: 160,
-                        child: Icon(Icons.person_pin_circle, size: 24.0),
+                        child: Icon(Icons.location_history, size: 24.0),
                       ),
                     ],
                   ),

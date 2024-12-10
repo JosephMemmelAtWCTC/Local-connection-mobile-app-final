@@ -8,6 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'Models/LocalLocation.dart';
+import 'Models/LocationLabel.dart';
 
 class MapMainPage extends StatefulWidget {
   const MapMainPage({super.key, required this.title});
@@ -118,8 +119,10 @@ class _MapMainPageState extends State<MapMainPage> {
                         point: LatLng(localLocation.latitude, localLocation.longitude),
                         width: 160,
                         height: 160,
-                        child: IconButton(
-                          icon: const Icon(Icons.garage),
+                        child:
+                          // Text(LocationLabel.toEnum(localLocation.localLabelStrings.first).title)
+                        IconButton(
+                          icon: Icon(localLocation.localLabelStrings.isNotEmpty ? LocationLabel.toEnum(localLocation.localLabelStrings.first).icon : LocationLabel.other.icon),
                           color: _selectedMarker?.id == localLocation.id ? Colors.green : Colors.black,
                           onPressed: () {
                             setState(() {
@@ -148,10 +151,22 @@ class _MapMainPageState extends State<MapMainPage> {
                   padding: const EdgeInsets.all(8),
                   itemCount: AppData().cachedListLocalLocations.length,
                   itemBuilder: (BuildContext context, int i) {
+                    final double relativeDistance = Geolocator.distanceBetween(
+                      AppData().cachedListLocalLocations[i].latitude,
+                      AppData().cachedListLocalLocations[i].longitude,
+                      AppData().currentUserPosition.latitude,
+                      AppData().currentUserPosition.longitude
+                    );
+                    AppData().cachedListLocalLocations.sort((a, b) => relativeDistance.compareTo(relativeDistance));
+
+
+
                     return GestureDetector(
                       onTap: () {
                         setState(() {
                           _selectedMarker = AppData().cachedListLocalLocations[i];
+                          _currentSliderValue = 18;
+                          _mapController.move(LatLng(AppData().cachedListLocalLocations[i].latitude, AppData().cachedListLocalLocations[i].longitude), _currentSliderValue);
                         });
                         print("_selectedMarker.id ${_selectedMarker?.id}");
                       },
@@ -213,6 +228,8 @@ class _LocalLocationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double distanceInMiles = (Geolocator.distanceBetween(localLocation.latitude, localLocation.longitude, AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude)/1609.344);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       decoration: BoxDecoration(
@@ -225,9 +242,9 @@ class _LocalLocationCard extends StatelessWidget {
             flex: 1,
             child: Column(
               children: [
-                const Icon(Icons.home),
+                Icon(LocationLabel.toEnum(localLocation.localLabelStrings.first).icon),
                 Text(
-                  "${(Geolocator.distanceBetween(localLocation.latitude, localLocation.longitude, AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude)/1609.344).toStringAsFixed(1)} miles",
+                  "${distanceInMiles.toStringAsFixed(distanceInMiles>1 ? 1 : 2)} miles",
                   style: TextStyle(
                     color: Colors.purple,
                     fontWeight: FontWeight.bold,
@@ -255,20 +272,20 @@ class _LocalLocationCard extends StatelessWidget {
                     color: Colors.grey,
                   ),
                 ),
-                const Text(
-                  '10:30am - 6:00pm',
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.grey,
-                  ),
-                ),
                 Text(
-                  "${localLocation.latitude} ${localLocation.longitude}",
+                  "${(localLocation.dateStart!).month}/${(localLocation.dateStart!).day}/${(localLocation.dateStart!).year} -> ${(localLocation.dateEnd!).month}/${(localLocation.dateEnd!).day}/${(localLocation.dateEnd!).year}",
                   style: TextStyle(
                     fontSize: 12.0,
                     color: Colors.grey,
                   ),
                 ),
+                // Text(
+                //   "${localLocation.latitude} ${localLocation.longitude}",
+                //   style: TextStyle(
+                //     fontSize: 12.0,
+                //     color: Colors.grey,
+                //   ),
+                // ),
               ],
             ),
           ),

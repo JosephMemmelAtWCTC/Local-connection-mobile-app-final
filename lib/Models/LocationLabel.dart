@@ -19,10 +19,11 @@ enum LocationLabel {
 
   static toEnum(String name){
     for(LocationLabel localLabelEnum in LocationLabel.values){
-      if(localLabelEnum.id.toString() == name || localLabelEnum.name == name){
+      if(localLabelEnum.id.toString() == name || localLabelEnum.title == name){
         return localLabelEnum;
       }
     }
+    return other;
   }
 
 
