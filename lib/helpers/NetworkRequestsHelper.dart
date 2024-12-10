@@ -5,6 +5,8 @@ class NetworkRequestsHelper{
 
   static Future<http.Response> postData(String apiUrl, {Object? bodyJson}) async {
     try {
+      print("postData is...'");
+      print("postData is '${jsonEncode(bodyJson)}'");
       final response = await http.post(
         Uri.parse(apiUrl),
         headers: <String, String>{
@@ -26,7 +28,7 @@ class NetworkRequestsHelper{
       //   throw Exception('Failed to post data');
       // }
     } catch (e) {
-      throw Exception('Failed to post data');
+      throw Exception('Failed to post data ${e}');
       // setState(() {
       //   result = 'Error: $e';
       // });

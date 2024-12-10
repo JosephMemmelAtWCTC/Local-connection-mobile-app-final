@@ -1,6 +1,9 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:local_connection_first/helpers/NetworkRequestsHelper.dart';
 // import 'package:url_launcher/url_launcher.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -198,6 +201,24 @@ class _ManagePageState extends State<ManagePage> {
                         return null;
                       },
                     ),
+                    TextFormField(
+                      controller: _descriptionController,
+                      decoration: InputDecoration(
+                        labelText: "Description",
+                        hintText: "Enter a description",
+                        counterText: "${_descriptionController.text.length}/200",
+                      ),
+                      maxLength: 200,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a description';
+                        }
+                        return null;
+                      },
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -267,7 +288,27 @@ class _ManagePageState extends State<ManagePage> {
                       }),
                     ),
                     TextButton(
-                      onPressed: () => "_selectDate(context, false)",
+                      onPressed: () async {
+
+                        print("DateTime.now().toString() ${DateTime.now().toString()}");
+                        Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/localLocations", bodyJson: {
+                            "id": 0,
+                            "enabled": true,
+                            "locationNickname": _titleController.text,
+                            "creatorId": AppData().loggedInUser.username ?? "_____",
+                            "description": _descriptionController.text,
+                            "latitude": AppData().currentUserPosition.latitude,
+                            "longitude": AppData().currentUserPosition.longitude,
+                            "createdOn": DateTime.now().toIso8601String(),
+                            "dateStart": DateTime.now().toIso8601String(),
+                            "dateEnd": DateTime.now().toIso8601String(),
+                            "localLabelStrings": [LocationLabel.toEnum(_radioGroupValue.toString()).title]
+                        });
+                        // final responseData = jsonDecode(response.body);
+
+                        // print("responseData for post location = ${jsonDecode(responseData)}");
+
+                      },
                       child: const Text("Save"),
                     ),
                   ],
