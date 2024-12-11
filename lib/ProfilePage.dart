@@ -184,19 +184,19 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Column(
                     children: [
-                      Icon(Icons.share, color: Colors.green[500]),
+                      Icon(Icons.share, color: Theme.of(context).colorScheme.primary),
                       const Text('Share'),
                     ],
                   ),
                   Column(
                     children: [
-                      Icon(Icons.android, color: Colors.green[500]),
+                      Icon(Icons.android, color: Theme.of(context).colorScheme.primary),
                       const Text('View'),
                     ],
                   ),
                   Column(
                     children: [
-                      IconButton(icon: const Icon(Icons.commit), color: Colors.green[500], onPressed: () async {
+                      IconButton(icon: const Icon(Icons.commit), color: Theme.of(context).colorScheme.primary, onPressed: () async {
                         // if (await canLaunchUrl(_githubUrl)) {
                         //   await launchUrl(_githubUrl);
                         // } else {

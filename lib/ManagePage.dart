@@ -153,7 +153,7 @@ class _ManagePageState extends State<ManagePage> {
                           borderRadius: BorderRadius.circular(8.0),
                           color: Theme.of(context).colorScheme.primaryFixed,
                           border: Border.all(
-                            color: Theme.of(context).colorScheme.onTertiaryFixedVariant,
+                            color: Theme.of(context).colorScheme.secondary,
                             width: 2.0,
                           ),
                         ),
@@ -171,10 +171,10 @@ class _ManagePageState extends State<ManagePage> {
             ),
             Container(
               width: double.infinity,
-              height: 400,
+              height: 420,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.blue,
+                  color: Theme.of(context).colorScheme.secondary,
                   width: 3.0,
                 ),
               ),
@@ -245,7 +245,7 @@ class _ManagePageState extends State<ManagePage> {
                           onPressed: () async {
                             final newDate = await showDatePicker(
                               context: context,
-                              firstDate: DateTime.now(),
+                              firstDate: _localLocation.dateStart ?? DateTime.now(),
                               lastDate: DateTime(DateTime.now().year+1, DateTime.now().month, DateTime.now().day),
                               initialDate: _localLocation.dateEnd,
                             );
@@ -301,6 +301,10 @@ class _ManagePageState extends State<ManagePage> {
                       }),
                     ),
                     TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primaryFixedDim),
+                        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0)),
+                      ),
                       onPressed: () async {
 
                         if(_localLocation.dateStart != null && _localLocation.dateEnd != null){
@@ -318,7 +322,12 @@ class _ManagePageState extends State<ManagePage> {
                             "localLabelStrings": [LocationLabel.toEnum(_radioGroupValue.toString()).title]
                           });
                         }else{
-
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                              Text('Start date or end date cannot be empty.'),
+                            ),
+                          );
                         }
                         // final responseData = jsonDecode(response.body);
 
@@ -384,9 +393,9 @@ class _LocationLabelCheckboxState extends State<LocationLabelCheckbox> {
             }
           ),
           const SizedBox(width: 8.0),
-          Icon(widget.locationLabel.icon),
+          Icon(widget.locationLabel.icon, color: Theme.of(context).colorScheme.secondary),
           const SizedBox(width: 8.0),
-          Text(widget.locationLabel.title),
+          Text(widget.locationLabel.title, selectionColor: Theme.of(context).colorScheme.secondary),
         ],
       ),
     );

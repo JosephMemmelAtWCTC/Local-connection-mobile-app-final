@@ -134,7 +134,7 @@ class _MapMainPageState extends State<MapMainPage> {
                         point: AppData().currentLatLong,
                         width: 160,
                         height: 160,
-                        child: Icon(Icons.person_pin_circle, size: 24.0),
+                        child: Icon(Icons.person_pin_circle, size: 24.0, color: Theme.of(context).colorScheme.tertiary),
                       ),
                     ],
                   ),
@@ -148,7 +148,7 @@ class _MapMainPageState extends State<MapMainPage> {
                           // Text(LocationLabel.toEnum(localLocation.localLabelStrings.first).title)
                         IconButton(
                           icon: Icon(localLocation.localLabelStrings.isNotEmpty ? LocationLabel.toEnum(localLocation.localLabelStrings.first).icon : LocationLabel.other.icon),
-                          color: _selectedMarker?.id == localLocation.id ? Colors.green : Colors.black,
+                          color: _selectedMarker?.id == localLocation.id ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.secondary,
                           onPressed: () {
                             setState(() {
                               _selectedMarker = localLocation;
@@ -171,7 +171,7 @@ class _MapMainPageState extends State<MapMainPage> {
                 height: _loadingLocations ? 45 : (_cachedListLocalLocations.isNotEmpty ? 250 : 0),
                 decoration: !_loadingLocations ? BoxDecoration(
                   border: Border.all(
-                    color: Colors.blue,
+                    color: Theme.of(context).colorScheme.secondaryContainer,
                     width: 3.0,
                   ),
                 ) : BoxDecoration(),
@@ -199,10 +199,11 @@ class _MapMainPageState extends State<MapMainPage> {
                         print("_selectedMarker.id ${_selectedMarker?.id}");
                       },
                       child: Card.filled(
+                        surfaceTintColor: _selectedMarker?.id == _cachedListLocalLocations[i].id ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.secondary,
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
-                            color: _selectedMarker?.id == _cachedListLocalLocations[i].id ? Colors.green : Colors.black, // Change this to your desired color
-                            width: 2.0,
+                            color: _selectedMarker?.id == _cachedListLocalLocations[i].id ? Theme.of(context).colorScheme.tertiary : Theme.of(context).colorScheme.primaryFixedDim, // Change this to your desired color
+                            width: _selectedMarker?.id == _cachedListLocalLocations[i].id ? 3.0 : 2.0,
                           ),
                           borderRadius: BorderRadius.circular(4.0),
                         ),
@@ -262,7 +263,7 @@ class _LocalLocationCard extends StatelessWidget {
                 Text(
                   "${distanceInMiles.toStringAsFixed(distanceInMiles>1 ? 1 : 5)} miles",
                   style: TextStyle(
-                    color: Colors.purple,
+                    color: Theme.of(context).colorScheme.tertiary,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -276,9 +277,10 @@ class _LocalLocationCard extends StatelessWidget {
               children: [
                 Text(
                   localLocation.locationNickname,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                 ),
                 Text(

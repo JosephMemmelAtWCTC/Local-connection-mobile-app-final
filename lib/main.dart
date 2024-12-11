@@ -13,7 +13,16 @@ class NavigationBarApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(useMaterial3: true),
+      // theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+
+        // Define the default brightness and colors.
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF5EFF00),
+          brightness: Brightness.light,
+        ),
+      ),
       home: const NavigationExample(),
 
     );
@@ -70,7 +79,7 @@ class _NavigationExampleState extends State<NavigationExample> {
             currentPageIndex = index;
           });
         },
-        indicatorColor: Colors.amber,
+        indicatorColor: Theme.of(context).colorScheme.primaryFixedDim,
         selectedIndex: currentPageIndex,
         destinations: <Widget>[
           const NavigationDestination(
@@ -94,7 +103,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         ],
       ),
       body: <Widget>[
-        const MapMainPage(title: "Title"),
+        const MapMainPage(title: "Local Location"),
         /// Notifications page
         // const Padding(
         //   padding: EdgeInsets.all(8.0),
@@ -118,7 +127,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         //   ),
         // ),
 
-        const ManagePage(title: "Title"),
+        const ManagePage(title: "Local Location"),
 
         /// Messages page
         // ListView.builder(
@@ -162,7 +171,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         //   },
         // ),
         /// Profile page
-          const ProfilePage(title: "Title")
+          const ProfilePage(title: "Local Location")
       ][currentPageIndex],
     );
   }
