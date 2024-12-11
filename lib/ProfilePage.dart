@@ -146,39 +146,60 @@ class _ProfilePageState extends State<ProfilePage> {
                       'Auto-refresh Login',
                     ),
                     ToggleButtons(
-                        isSelected: [AppData().loggedInUser.stayLoggedIn, !AppData().loggedInUser.stayLoggedIn],
-                        selectedColor: Theme.of(context).colorScheme.secondary,
-                        fillColor: Theme.of(context).colorScheme.primaryContainer,
-                        onPressed: (int index) {
-                          setState(() {
-                            // _selections[0] = !_selections[0];
-                            // _selections[1] = !_selections[1];
-                            AppData().loggedInUser.stayLoggedIn = !AppData().loggedInUser.stayLoggedIn;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(30),
-                        borderWidth: 2,
-                        borderColor: Theme.of(context).colorScheme.primary,
-                        selectedBorderColor: Theme.of(context).colorScheme.primary,
-                        children: const [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Icon(Icons.my_location),
-                              Icon(Icons.lock_clock),
-                              Text('On'),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // Icon(Icons.location_searching),
-                              Icon(Icons.lock),
-                              Text('Off'),
-                            ],
-                          ),
-                        ]
+                      isSelected: [AppData().loggedInUser.stayLoggedIn, !AppData().loggedInUser.stayLoggedIn],
+                      selectedColor: Theme.of(context).colorScheme.secondary,
+                      fillColor: Theme.of(context).colorScheme.primaryContainer,
+                      onPressed: (int index) {
+                        setState(() {
+                          // _selections[0] = !_selections[0];
+                          // _selections[1] = !_selections[1];
+                          AppData().loggedInUser.stayLoggedIn = !AppData().loggedInUser.stayLoggedIn;
+                        });
+                      },
+                      borderRadius: BorderRadius.circular(30),
+                      borderWidth: 2,
+                      borderColor: Theme.of(context).colorScheme.primary,
+                      selectedBorderColor: Theme.of(context).colorScheme.primary,
+                      children: const [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Icon(Icons.my_location),
+                            Icon(Icons.lock_clock),
+                            Text('On'),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Icon(Icons.location_searching),
+                            Icon(Icons.lock),
+                            Text('Off'),
+                          ],
+                        ),
+                      ]
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primaryFixedDim),
+                        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0)),
                       ),
+                      onPressed: () async {
+                        AppData().loggedInUser.logout();
+                        setState(() {
+
+                        });
+                        if(!AppData().loggedInUser.isLoggedIn){
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                              Text('Logged out'),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('Logout'),
+                    ),
                   ]
               ),
             ),
