@@ -37,6 +37,8 @@ class _MapMainPageState extends State<MapMainPage> {
 
   LocalLocation? _selectedMarker;
 
+  bool _loadingLocations = true;
+
   @override
   void initState() {
     super.initState();
@@ -46,26 +48,31 @@ class _MapMainPageState extends State<MapMainPage> {
         setState(() {
       });
     });
+    // if(_cachedListLocalLocations.isEmpty){
+    //   _loadingLocations = true;
+    //   setState(() {});
+    // }
     AppData().currentLocalLocations.then((List<LocalLocation> localLocations){
-      _cachedListLocalLocations = localLocations;
-      _cachedListLocalLocations.sort((a, b) {
-        final double distanceA = Geolocator.distanceBetween(
-            a.latitude,
-            a.longitude,
-            AppData().currentUserPosition.latitude,
-            AppData().currentUserPosition.longitude
-        );
-        final double distanceB = Geolocator.distanceBetween(
-            b.latitude,
-            b.longitude,
-            AppData().currentUserPosition.latitude,
-            AppData().currentUserPosition.longitude
-        );
-        return distanceA.compareTo(distanceB);
+      setState(() {
+        _cachedListLocalLocations = localLocations;
+        _cachedListLocalLocations.sort((a, b) {
+          final double distanceA = Geolocator.distanceBetween(
+              a.latitude,
+              a.longitude,
+              AppData().currentUserPosition.latitude,
+              AppData().currentUserPosition.longitude
+          );
+          final double distanceB = Geolocator.distanceBetween(
+              b.latitude,
+              b.longitude,
+              AppData().currentUserPosition.latitude,
+              AppData().currentUserPosition.longitude
+          );
+          return distanceA.compareTo(distanceB);
+        });
+        _loadingLocations = false;
       });
-
-      setState(() {});
-      } as FutureOr Function(List<LocalLocation> localLocations));
+    } as FutureOr Function(List<LocalLocation> localLocations));
 
   }
 
@@ -155,17 +162,20 @@ class _MapMainPageState extends State<MapMainPage> {
                 ],
               ),
             ),
-            SizedBox(
+            AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
               child: Container(
+                // padding: EdgeInsets.only(top: _loadingLocations ? 10 : 0),
                 // width: 200,
-                height: min(250, _cachedListLocalLocations.length*100),
-                decoration: BoxDecoration(
+                height: _loadingLocations ? 45 : (_cachedListLocalLocations.isNotEmpty ? 250 : 0),
+                decoration: !_loadingLocations ? BoxDecoration(
                   border: Border.all(
                     color: Colors.blue,
                     width: 3.0,
                   ),
-                ),
-                child: ListView.builder(
+                ) : BoxDecoration(),
+                child: _loadingLocations ? CircularProgressIndicator() : ListView.builder(
                   padding: const EdgeInsets.all(8),
                   itemCount: _cachedListLocalLocations.length,
                   itemBuilder: (BuildContext context, int i) {
@@ -183,7 +193,7 @@ class _MapMainPageState extends State<MapMainPage> {
                       onTap: () {
                         setState(() {
                           _selectedMarker = _cachedListLocalLocations[i];
-                          // _currentSliderValue = 18;
+                          _currentSliderValue = max(_currentSliderValue, 14);
                           _mapController.move(LatLng(_cachedListLocalLocations[i].latitude, _cachedListLocalLocations[i].longitude), _currentSliderValue);
                         });
                         print("_selectedMarker.id ${_selectedMarker?.id}");
@@ -210,7 +220,7 @@ class _MapMainPageState extends State<MapMainPage> {
               child: Slider(
                 value: _currentSliderValue,
                 min: 6,
-                max: 20,
+                max: 25,
                 divisions: 14,
                 label: _currentSliderValue.round().toString(),
                 onChanged: (double value) {

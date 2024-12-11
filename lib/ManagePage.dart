@@ -242,8 +242,21 @@ class _ManagePageState extends State<ManagePage> {
                         ),
                         const Text("End Date"),
                         TextButton(
-                          onPressed: () => "_selectDate(context, false)",
-                          child: const Text("Select"),
+                          onPressed: () async {
+                            final newDate = await showDatePicker(
+                              context: context,
+                              firstDate: DateTime.now(),
+                              lastDate: DateTime(DateTime.now().year+1, DateTime.now().month, DateTime.now().day),
+                              initialDate: _localLocation.dateEnd,
+                            );
+                            if(newDate != null){
+                              _localLocation.dateEnd = newDate;
+                              setState(() {});
+                            }
+                          },
+                          child: Text(
+                            _localLocation.dateEnd != null ? '${_localLocation.dateEnd!.month}/${_localLocation.dateEnd!.day}/${_localLocation.dateEnd!.year}' : 'mm/dd/yy',
+                          ),
                         ),
                       ],
                     ),
@@ -290,8 +303,8 @@ class _ManagePageState extends State<ManagePage> {
                     TextButton(
                       onPressed: () async {
 
-                        print("DateTime.now().toString() ${DateTime.now().toString()}");
-                        Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/localLocations", bodyJson: {
+                        if(_localLocation.dateStart != null && _localLocation.dateEnd != null){
+                          Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/localLocations", bodyJson: {
                             "id": 0,
                             "enabled": true,
                             "locationNickname": _titleController.text,
@@ -300,10 +313,13 @@ class _ManagePageState extends State<ManagePage> {
                             "latitude": AppData().currentUserPosition.latitude,
                             "longitude": AppData().currentUserPosition.longitude,
                             "createdOn": DateTime.now().toIso8601String(),
-                            "dateStart": DateTime.now().toIso8601String(),
-                            "dateEnd": DateTime.now().toIso8601String(),
+                            "dateStart": _localLocation.dateStart?.toIso8601String(),
+                            "dateEnd": _localLocation.dateEnd?.toIso8601String(),
                             "localLabelStrings": [LocationLabel.toEnum(_radioGroupValue.toString()).title]
-                        });
+                          });
+                        }else{
+
+                        }
                         // final responseData = jsonDecode(response.body);
 
                         // print("responseData for post location = ${jsonDecode(responseData)}");
