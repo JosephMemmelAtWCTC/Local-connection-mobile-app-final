@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart';
@@ -13,6 +14,7 @@ class LoggedInUser {
   int? expiresIn;
 
   bool isLoggedIn = false;
+  bool stayLoggedIn = true;
 
   login(String username, String password) async {
     Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/identity/login", bodyJson: {
@@ -28,6 +30,7 @@ class LoggedInUser {
       refreshToken = responseData["refreshToken"];
 
       profileImage = User(username).profileImgPath;
+      stayLoggedIn = true;
       return true;
     }else{
       return false;
@@ -35,8 +38,29 @@ class LoggedInUser {
 
   }
 
+  scheduleLoginRefresh() async {
+    if(stayLoggedIn){
+      Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/identity/refresh", bodyJson: {
+        "refreshToken": refreshToken,
+      });
+      final responseData = jsonDecode(response.body);
+      if(response.statusCode == 200 || response.statusCode == 201){
+        accessToken = responseData["accessToken"];
+        expiresIn = responseData["expiresIn"];
+        refreshToken = responseData["refreshToken"];
+
+        Timer(new Duration(seconds: expiresIn!-60), scheduleLoginRefresh);
+      }else{
+        logout();
+      }
+    }
+
+  }
+
   logout(){
     isLoggedIn = false;
+    stayLoggedIn = false;
+
     username = null;
     profileImage = null;
     accessToken = null;

@@ -23,7 +23,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
 
   // [User Input States]
-  final List<bool> _selections = [false, true];  // List<bool> _selections = List.generate(2, (_) => false);
+  // final List<bool> _selections = [false, true];  // List<bool> _selections = List.generate(2, (_) => false);
   String _username = "", _password = "";
 
 
@@ -135,16 +135,17 @@ class _ProfilePageState extends State<ProfilePage> {
                       'Profile2',
                     ),
                     const Text(
-                      'Location Accuracy',
+                      'Auto-refresh Login',
                     ),
                     ToggleButtons(
-                        isSelected: _selections,
+                        isSelected: [AppData().loggedInUser.stayLoggedIn, !AppData().loggedInUser.stayLoggedIn],
                         selectedColor: Colors.primaries.first,
                         fillColor: Colors.primaries.last,
                         onPressed: (int index) {
                           setState(() {
-                            _selections[0] = !_selections[0];
-                            _selections[1] = !_selections[1];
+                            // _selections[0] = !_selections[0];
+                            // _selections[1] = !_selections[1];
+                            AppData().loggedInUser.stayLoggedIn = !AppData().loggedInUser.stayLoggedIn;
                           });
                         },
                         borderRadius: BorderRadius.circular(30),
@@ -155,15 +156,17 @@ class _ProfilePageState extends State<ProfilePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.my_location),
-                              Text('High'),
+                              // Icon(Icons.my_location),
+                              Icon(Icons.lock_clock),
+                              Text('On'),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.location_searching),
-                              Text('Low'),
+                              // Icon(Icons.location_searching),
+                              Icon(Icons.lock),
+                              Text('Off'),
                             ],
                           ),
                         ]
