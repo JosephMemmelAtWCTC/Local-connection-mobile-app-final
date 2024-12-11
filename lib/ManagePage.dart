@@ -117,6 +117,7 @@ class _ManagePageState extends State<ManagePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
+              // flex: 2,
               child: FlutterMap(
                 mapController: _mapController,
                 options: MapOptions(
@@ -169,174 +170,212 @@ class _ManagePageState extends State<ManagePage> {
                 ],
               ),
             ),
+            // Flexible(
             Container(
-              width: double.infinity,
-              height: 420,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.secondary,
-                  width: 3.0,
+              // flex: 3,
+              child: Container(
+                width: double.infinity,
+                height: 420,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.secondary,
+                    width: 3.0,
+                  ),
                 ),
-              ),
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      controller: _titleController,
-                      decoration: InputDecoration(
-                        labelText: "Title",
-                        hintText: "Enter a title",
-                        counterText: "${_titleController.text.length}/50",
-                      ),
-                      maxLength: 50,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a title';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: _descriptionController,
-                      decoration: InputDecoration(
-                        labelText: "Description",
-                        hintText: "Enter a description",
-                        counterText: "${_descriptionController.text.length}/200",
-                      ),
-                      maxLength: 200,
-                      onChanged: (value) {
-                        setState(() {});
-                      },
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a description';
-                        }
-                        return null;
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text("Start Date"),
-                        TextButton(
-                          onPressed: () async {
-                            final newDate = await showDatePicker(
-                              context: context,
-                              firstDate: DateTime.now(),
-                              lastDate: DateTime(DateTime.now().year+1, DateTime.now().month, DateTime.now().day),
-                              initialDate: _localLocation.dateStart,
-                            );
-                            if(newDate != null){
-                              _localLocation.dateStart = newDate;
-                              setState(() {});
-                            }
-                          },
-                          child: Text(
-                            _localLocation.dateStart != null ? '${_localLocation.dateStart!.month}/${_localLocation.dateStart!.day}/${_localLocation.dateStart!.year}' : 'mm/dd/yy',
-                          ),
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
+                        controller: _titleController,
+                        decoration: InputDecoration(
+                          labelText: "Title",
+                          hintText: "Enter a title",
+                          counterText: "${_titleController.text.length}/50",
                         ),
-                        const Text("End Date"),
-                        TextButton(
-                          onPressed: () async {
-                            final newDate = await showDatePicker(
-                              context: context,
-                              firstDate: _localLocation.dateStart ?? DateTime.now(),
-                              lastDate: DateTime(DateTime.now().year+1, DateTime.now().month, DateTime.now().day),
-                              initialDate: _localLocation.dateEnd,
-                            );
-                            if(newDate != null){
-                              _localLocation.dateEnd = newDate;
-                              setState(() {});
-                            }
-                          },
-                          child: Text(
-                            _localLocation.dateEnd != null ? '${_localLocation.dateEnd!.month}/${_localLocation.dateEnd!.day}/${_localLocation.dateEnd!.year}' : 'mm/dd/yy',
-                          ),
-                        ),
-                      ],
-                    ),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: <Widget>[
-                    //     new Radio(
-                    //       value: 0,
-                    //       groupValue: _radioGroupValue,
-                    //       onChanged: changeRadioValue,
-                    //     ),
-                    //     new Text(
-                    //       'Garage Sale',
-                    //       style: new TextStyle(fontSize: 16.0),
-                    //     ),
-                    //
-                    //
-                    //
-                    //
-                    //   ],
-                    // ),
-                    GridView.count(
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      childAspectRatio: 4.0,
-                      children: List.generate(LocationLabel.values.length, (index) {
-                        final locationLabel = LocationLabel.values[index];
-                        return GestureDetector(
-                          onTap: () {
-                            print("______ ${index}");
-                            setState(() {
-                              _radioGroupValue = index;
-                            });
-                          },
-                          child: LocationLabelCheckbox(
-                            radioGroupValue: _radioGroupValue,
-                            radioIndex: index,
-                            locationLabel: locationLabel,
-                            onTap: _handleRadioTap,
-                          ),
-                        );
-                      }),
-                    ),
-                    TextButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primaryFixedDim),
-                        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0)),
+                        maxLength: 50,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a title';
+                          }
+                          return null;
+                        },
                       ),
-                      onPressed: () async {
-
-                        if(_localLocation.dateStart != null && _localLocation.dateEnd != null){
-                          Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/localLocations", bodyJson: {
-                            "id": 0,
-                            "enabled": true,
-                            "locationNickname": _titleController.text,
-                            "creatorId": AppData().loggedInUser.username ?? "_____",
-                            "description": _descriptionController.text,
-                            "latitude": AppData().currentUserPosition.latitude,
-                            "longitude": AppData().currentUserPosition.longitude,
-                            "createdOn": DateTime.now().toIso8601String(),
-                            "dateStart": _localLocation.dateStart?.toIso8601String(),
-                            "dateEnd": _localLocation.dateEnd?.toIso8601String(),
-                            "localLabelStrings": [LocationLabel.toEnum(_radioGroupValue.toString()).title]
-                          });
-                        }else{
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content:
-                              Text('Start date or end date cannot be empty.'),
+                      TextFormField(
+                        controller: _descriptionController,
+                        decoration: InputDecoration(
+                          labelText: "Description",
+                          hintText: "Enter a description",
+                          counterText: "${_descriptionController.text.length}/200",
+                        ),
+                        maxLength: 200,
+                        onChanged: (value) {
+                          setState(() {});
+                        },
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a description';
+                          }
+                          return null;
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Start Date"),
+                          TextButton(
+                            onPressed: () async {
+                              final newDate = await showDatePicker(
+                                context: context,
+                                firstDate: DateTime.now(),
+                                lastDate: DateTime(DateTime.now().year+1, DateTime.now().month, DateTime.now().day),
+                                initialDate: _localLocation.dateStart,
+                              );
+                              if(newDate != null){
+                                _localLocation.dateStart = newDate;
+                                setState(() {});
+                              }
+                            },
+                            child: Text(
+                              _localLocation.dateStart != null ? '${_localLocation.dateStart!.month}/${_localLocation.dateStart!.day}/${_localLocation.dateStart!.year}' : 'mm/dd/yy',
                             ),
-                          );
-                        }
-                        // final responseData = jsonDecode(response.body);
+                          ),
+                          const Text("End Date"),
+                          TextButton(
+                            onPressed: () async {
+                              final newDate = await showDatePicker(
+                                context: context,
+                                firstDate: _localLocation.dateStart ?? DateTime.now(),
+                                lastDate: DateTime(DateTime.now().year+1, DateTime.now().month, DateTime.now().day),
+                                initialDate: _localLocation.dateEnd,
+                              );
+                              if(newDate != null){
+                                _localLocation.dateEnd = newDate;
+                                setState(() {});
+                              }
+                            },
+                            child: Text(
+                              _localLocation.dateEnd != null ? '${_localLocation.dateEnd!.month}/${_localLocation.dateEnd!.day}/${_localLocation.dateEnd!.year}' : 'mm/dd/yy',
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: <Widget>[
+                      //     new Radio(
+                      //       value: 0,
+                      //       groupValue: _radioGroupValue,
+                      //       onChanged: changeRadioValue,
+                      //     ),
+                      //     new Text(
+                      //       'Garage Sale',
+                      //       style: new TextStyle(fontSize: 16.0),
+                      //     ),
+                      //
+                      //
+                      //
+                      //
+                      //   ],
+                      // ),
+                      SingleChildScrollView(
+                        child: GridView.count(
+                          shrinkWrap: true, // Wrap the GridView with SingleChildScrollView
+                          crossAxisCount: 2,
+                          childAspectRatio: 4.0,
+                          children: List.generate(LocationLabel.values.length, (index) {
+                            final locationLabel = LocationLabel.values[index];
+                            return GestureDetector(
+                              onTap: () {
+                                print("______ ${index}");
+                                setState(() {
+                                  _radioGroupValue = index;
+                                });
+                              },
+                              child: LocationLabelCheckbox(
+                                radioGroupValue: _radioGroupValue,
+                                radioIndex: index,
+                                locationLabel: locationLabel,
+                                onTap: _handleRadioTap,
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primaryFixedDim),
+                          padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0)),
+                        ),
+                        onPressed: () async {
 
-                        // print("responseData for post location = ${jsonDecode(responseData)}");
+                          if(_localLocation.dateStart != null && _localLocation.dateEnd != null){
+                            Response response = await NetworkRequestsHelper.postData("https://localconnectionsapi.azurewebsites.net/localLocations", bodyJson: {
+                              "id": 0,
+                              "enabled": true,
+                              "locationNickname": _titleController.text,
+                              "creatorId": AppData().loggedInUser.username ?? "_____",
+                              "description": _descriptionController.text,
+                              "latitude": AppData().currentUserPosition.latitude,
+                              "longitude": AppData().currentUserPosition.longitude,
+                              "createdOn": DateTime.now().toIso8601String(),
+                              "dateStart": _localLocation.dateStart?.toIso8601String(),
+                              "dateEnd": _localLocation.dateEnd?.toIso8601String(),
+                              "localLabelStrings": [LocationLabel.toEnum(_radioGroupValue.toString()).title]
+                            });
+                            if(response.statusCode == 201){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                  Text('Posted your event! :).'),
+                                ),
+                              );
+                              _titleController.text = "";
+                              _descriptionController.text = "";
+                              _radioGroupValue = 0;
+                              _localLocation = new LocalLocation(
+                                id: 0,
+                                enabled: false,
+                                locationNickname: "Test",
+                                creatorId: "test",
+                                description: "Test2",
+                                latitude: 0.0,
+                                longitude: 0.0,
+                                createdOn: DateTime.now(),
+                                localLabelStrings: [],
+                              );
+                              setState(() {
 
-                      },
-                      child: const Text("Save"),
-                    ),
-                  ],
+                              });
+                            }else{
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                  Text('Failed Network Response'),
+                                ),
+                              );
+                            }
+                          }else{
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content:
+                                Text('Start date or end date cannot be empty.'),
+                              ),
+                            );
+                          }
+                          // final responseData = jsonDecode(response.body);
+
+                          // print("responseData for post location = ${jsonDecode(responseData)}");
+
+                        },
+                        child: const Text("Save"),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

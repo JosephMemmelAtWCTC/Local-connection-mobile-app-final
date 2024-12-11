@@ -96,10 +96,30 @@ class _NavigationExampleState extends State<NavigationExample> {
             label: 'Post',
           ),
           NavigationDestination(
-            selectedIcon: const Icon(Icons.perm_identity_outlined),
-            icon: const Icon(Icons.perm_identity),
-            label: AppData().loggedInUser.isLoggedIn ? "Login" : "Profile",
+            //   selectedIcon: const Icon(Icons.perm_identity_outlined),
+            //   icon: const Icon(Icons.perm_identity),
+            //   label: !AppData().loggedInUser.isLoggedIn ? "Login" : "Profile",
+            selectedIcon: SizedBox(
+              height: 24,
+              width: 24,
+              child: Image(
+                image: AppData().loggedInUser.profileImage != null
+                    ? NetworkImage(AppData().loggedInUser.profileImage ?? "")
+                    : const AssetImage('assets/images/unknown-person-icon-question-mark.jpg'),
+              ),
+            ),
+            icon: SizedBox(
+              height: 24, // Match the size with the selected icon
+              width: 24, // Match the size with the selected icon
+              child: Image(
+                image: AppData().loggedInUser.profileImage != null
+                    ? NetworkImage(AppData().loggedInUser.profileImage ?? "")
+                    : const AssetImage('assets/images/unknown-person-icon-question-mark.jpg'),
+              ),
+            ),
+            label: !AppData().loggedInUser.isLoggedIn ? "Login" : "Profile",
           ),
+
         ],
       ),
       body: <Widget>[

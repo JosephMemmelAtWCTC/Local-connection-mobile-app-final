@@ -131,16 +131,16 @@ class _ProfilePageState extends State<ProfilePage> {
                     Text(
                       AppData().loggedInUser.username ?? "ERROR",
                     ),
-                    const Text(
-                      'Profile2',
-                    ),
+                    // const Text(
+                    //   'Profile2',
+                    // ),
                     const Text(
                       'Auto-refresh Login',
                     ),
                     ToggleButtons(
                         isSelected: [AppData().loggedInUser.stayLoggedIn, !AppData().loggedInUser.stayLoggedIn],
-                        selectedColor: Colors.primaries.first,
-                        fillColor: Colors.primaries.last,
+                        selectedColor: Theme.of(context).colorScheme.secondary,
+                        fillColor: Theme.of(context).colorScheme.primaryContainer,
                         onPressed: (int index) {
                           setState(() {
                             // _selections[0] = !_selections[0];
@@ -150,8 +150,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         },
                         borderRadius: BorderRadius.circular(30),
                         borderWidth: 2,
-                        borderColor: Colors.primaries.first,
-                        selectedBorderColor: Colors.primaries.first,
+                        borderColor: Theme.of(context).colorScheme.primary,
+                        selectedBorderColor: Theme.of(context).colorScheme.primary,
                         children: const [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
