@@ -35,7 +35,6 @@ class LoggedInUser {
     }else{
       return false;
     }
-
   }
 
   scheduleLoginRefresh() async {

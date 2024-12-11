@@ -143,7 +143,7 @@ class _ManagePageState extends State<ManagePage> {
                       ),
                     ],
                   ),
-                  Positioned(
+                  if(AppData().loggedInUser.isLoggedIn) Positioned(
                     top: 16.0,
                     left: 0,
                     right: 0,
@@ -173,7 +173,8 @@ class _ManagePageState extends State<ManagePage> {
             // Flexible(
             Container(
               // flex: 3,
-              child: Container(
+              child:
+              !AppData().loggedInUser.isLoggedIn ? const Text("You must be logged in to post") : Container(
                 width: double.infinity,
                 height: 420,
                 decoration: BoxDecoration(

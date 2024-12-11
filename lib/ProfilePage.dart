@@ -101,17 +101,25 @@ class _ProfilePageState extends State<ProfilePage> {
                       }
                     ),
                     TextButton(
-                      style: const ButtonStyle(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Theme.of(context).colorScheme.primaryFixedDim),
+                        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0)),
                       ),
                       onPressed: () async {
                         final success = await AppData().loggedInUser.login(_username, _password);
                         if (success) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content:
+                              Text('Login successful'),
+                            ),
+                          );
                           setState(() {});
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content:
-                                Text('Login failed.'),
+                                Text('Login failed'),
                             ),
                           );
                         }

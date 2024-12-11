@@ -87,6 +87,7 @@ class _NavigationExampleState extends State<NavigationExample> {
             icon: const Icon(Icons.map),
             label: 'Local',
           ),
+          // if(AppData().loggedInUser.isLoggedIn)
           const NavigationDestination(
             // icon: Badge(
               // label: Text('2'),
@@ -102,20 +103,20 @@ class _NavigationExampleState extends State<NavigationExample> {
             selectedIcon: SizedBox(
               height: 24,
               width: 24,
-              child: Image(
+              child: AppData().loggedInUser.isLoggedIn ? Image(
                 image: AppData().loggedInUser.profileImage != null
                     ? NetworkImage(AppData().loggedInUser.profileImage ?? "")
                     : const AssetImage('assets/images/unknown-person-icon-question-mark.jpg'),
-              ),
+              ) : const Icon(Icons.perm_identity_outlined),
             ),
             icon: SizedBox(
               height: 24, // Match the size with the selected icon
               width: 24, // Match the size with the selected icon
-              child: Image(
+              child: AppData().loggedInUser.isLoggedIn ? Image(
                 image: AppData().loggedInUser.profileImage != null
                     ? NetworkImage(AppData().loggedInUser.profileImage ?? "")
                     : const AssetImage('assets/images/unknown-person-icon-question-mark.jpg'),
-              ),
+              ) : const Icon(Icons.perm_identity_outlined),
             ),
             label: !AppData().loggedInUser.isLoggedIn ? "Login" : "Profile",
           ),
