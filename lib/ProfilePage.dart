@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -26,6 +26,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // final List<bool> _selections = [false, true];  // List<bool> _selections = List.generate(2, (_) => false);
   String _username = "", _password = "";
 
+  static final Uri _githubUrl = Uri.parse('https://github.com/JosephMemmelAtWCTC/Local-connection-mobile-app-final');
 
   @override
   Widget build(BuildContext context) {
@@ -226,11 +227,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   Column(
                     children: [
                       IconButton(icon: const Icon(Icons.commit), color: Theme.of(context).colorScheme.primary, onPressed: () async {
-                        // if (await canLaunchUrl(_githubUrl)) {
-                        //   await launchUrl(_githubUrl);
-                        // } else {
-                        //   throw 'Could not launch $_githubUrl';
-                        // }
+                        if (await canLaunchUrl(_githubUrl)) {
+                          await launchUrl(_githubUrl);
+                        } else {
+                          throw 'Could not launch $_githubUrl';
+                        }
                       }),
                       const Text('Github'),
                     ],

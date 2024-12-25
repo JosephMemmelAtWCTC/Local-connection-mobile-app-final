@@ -158,7 +158,15 @@ class _MapMainPageState extends State<MapMainPage> {
                       );
                     }).toList(),
                   ),
-
+                  RichAttributionWidget(
+                    animationConfig: const ScaleRAWA(), // Or `FadeRAWA` as is default
+                    attributions: [
+                      TextSourceAttribution(
+                        'OpenStreetMap contributors',
+                        // onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

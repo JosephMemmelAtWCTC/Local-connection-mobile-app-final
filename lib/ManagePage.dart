@@ -143,6 +143,15 @@ class _ManagePageState extends State<ManagePage> {
                       ),
                     ],
                   ),
+                  RichAttributionWidget(
+                    animationConfig: const ScaleRAWA(), // Or `FadeRAWA` as is default
+                    attributions: [
+                      TextSourceAttribution(
+                        'OpenStreetMap contributors',
+                        // onTap: () => launchUrl(Uri.parse('https://openstreetmap.org/copyright')),
+                      ),
+                    ],
+                  ),
                   if(AppData().loggedInUser.isLoggedIn) Positioned(
                     top: 16.0,
                     left: 0,
