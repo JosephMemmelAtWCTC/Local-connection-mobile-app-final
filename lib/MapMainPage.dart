@@ -167,6 +167,36 @@ class _MapMainPageState extends State<MapMainPage> {
                       ),
                     ],
                   ),
+                  Positioned(
+                    top: 50,
+                    right: 10,
+                    child:
+                    Column(
+                      children: [
+                        Text("Miles"),
+                        RotatedBox(
+                          quarterTurns: 3,
+                          child: SizedBox(
+                            width: 300,
+                            child: Slider(
+                              value: _currentSliderValue,
+                              min: 6,
+                              max: 25,
+                              divisions: 14,
+                              // label: _currentSliderValue.round().toString(),
+                              onChanged: (double value) {
+                                setState(() {
+                                  _currentSliderValue = value;
+                                  _mapController.move(
+                                      LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ]
+                    )
+                  ),
                 ],
               ),
             ),
