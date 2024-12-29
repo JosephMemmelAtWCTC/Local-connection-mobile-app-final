@@ -1,9 +1,10 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:local_connection_first/singletons/AppData.dart';
 
 class NetworkRequestsHelper{
 
-  static Future<http.Response> postData(String apiUrl, {Object? bodyJson}) async {
+  static Future<http.Response> postData(String apiUrl, {Object? bodyJson, bool? addAuth}) async {
     try {
       print("postData is...'");
       print("postData is '${jsonEncode(bodyJson)}'");
@@ -11,6 +12,7 @@ class NetworkRequestsHelper{
         Uri.parse(apiUrl),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
+          "Authorization": "Bearer ${AppData().loggedInUser.accessToken}",
         },
         body: jsonEncode(bodyJson) //jsonEncode(<String, dynamic>{
       );

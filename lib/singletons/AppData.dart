@@ -11,6 +11,9 @@ import '../helpers/NetworkRequestsHelper.dart';
 class AppData {
   static final AppData _appData = AppData._internal();
 
+  static final String endpointPath = "https://localconnectionsapi.azurewebsites.net/";
+  // static final String endpointPath = "http://localhost:5177/";
+
   LoggedInUser loggedInUser = LoggedInUser();
   Position currentUserPosition = Position(
     longitude: 0,
@@ -31,9 +34,7 @@ class AppData {
 
   Future<List<LocalLocation>> get currentLocalLocations async {
     print("INSIDE BEFORE");
-    final response = await NetworkRequestsHelper.getData(
-      "https://localconnectionsapi.azurewebsites.net/localLocations/all",
-    );
+    final response = await NetworkRequestsHelper.getData("${endpointPath}localLocations/all");
     print("INSIDE AFTER");
     // [{id: 1, locationNickname: Location Nickname, creatorId: CreatorID, description: Description, latitude: 0, longitude: 0, createdOn: 2024-12-04T05:55:48.336}]
     // const List<LocalLocation> localLocations = [];

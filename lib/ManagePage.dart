@@ -363,9 +363,9 @@ class _ManagePageState extends State<ManagePage> {
                               });
                             }else{
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
+                                SnackBar(
                                   content:
-                                  Text('Failed Network Response'),
+                                  Text('Failed Network Response: error ${response.statusCode}'),
                                 ),
                               );
                             }
