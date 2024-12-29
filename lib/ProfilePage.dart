@@ -73,18 +73,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   ? NetworkImage(AppData().loggedInUser.profileImage ?? "")
                   : const AssetImage('assets/images/unknown-person-icon-question-mark.jpg'),
             ),
-            if(!AppData().loggedInUser.isLoggedIn)
-              Container(
-                padding: const EdgeInsets.all(20),
+            if(!AppData().loggedInUser.isLoggedIn) Container(
+              padding: const EdgeInsets.all(20),
+              child: AutofillGroup(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-
                     TextField(
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Enter your email',
                       ),
+                      enableSuggestions: true,
+                      autofillHints: [AutofillHints.email],
                       onChanged: (value){
                         _username = value;
                       }
@@ -95,8 +96,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         hintText: 'Enter your password',
                       ),
                       obscureText: true,
-                      enableSuggestions: false,
                       autocorrect: false,
+                      autofillHints: [AutofillHints.password],
                       onChanged: (value){
                         _password = value;
                       }
@@ -130,6 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
               ),
+            ),
 
             if(AppData().loggedInUser.isLoggedIn)
               Container(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:local_connection_first/ProfilePage.dart';
 import 'package:local_connection_first/MapMainPage.dart';
 import 'package:local_connection_first/ManagePage.dart';
-import 'package:local_connection_first/helpers/ResourcesSystem.dart';
 import 'package:local_connection_first/singletons/AppData.dart';
 
 void main() => runApp(const NavigationBarApp());

@@ -176,7 +176,7 @@ class _MapMainPageState extends State<MapMainPage> {
               child: Container(
                 // padding: EdgeInsets.only(top: _loadingLocations ? 10 : 0),
                 // width: 200,
-                height: _loadingLocations ? 45 : (_cachedListLocalLocations.isNotEmpty ? 250 : 0),
+                height: _loadingLocations ? 45 : (_cachedListLocalLocations.isNotEmpty ? min(_cachedListLocalLocations.length * 70+25, 250) : 0),
                 decoration: !_loadingLocations ? BoxDecoration(
                   border: Border.all(
                     color: Theme.of(context).colorScheme.secondaryContainer,
@@ -224,22 +224,22 @@ class _MapMainPageState extends State<MapMainPage> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 50,
-              child: Slider(
-                value: _currentSliderValue,
-                min: 6,
-                max: 25,
-                divisions: 14,
-                label: _currentSliderValue.round().toString(),
-                onChanged: (double value) {
-                  setState(() {
-                    _currentSliderValue = value;
-                    _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
-                  });
-                },
-              ),
-            ),
+            // SizedBox(
+            //   height: 50,
+            //   child: Slider(
+            //     value: _currentSliderValue,
+            //     min: 6,
+            //     max: 25,
+            //     divisions: 14,
+            //     label: _currentSliderValue.round().toString(),
+            //     onChanged: (double value) {
+            //       setState(() {
+            //         _currentSliderValue = value;
+            //         _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+            //       });
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),
