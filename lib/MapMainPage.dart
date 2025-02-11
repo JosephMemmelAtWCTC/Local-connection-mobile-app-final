@@ -31,7 +31,7 @@ class MapMainPage extends StatefulWidget {
 
 class _MapMainPageState extends State<MapMainPage> {
 
-  double _currentSliderValue = 8;
+  double _currentMilesSliderValue = 8;
   final MapController _mapController = MapController();
   late List<LocalLocation> _cachedListLocalLocations = [];
 
@@ -74,13 +74,23 @@ class _MapMainPageState extends State<MapMainPage> {
       });
     } as FutureOr Function(List<LocalLocation> localLocations));
 
+    // Listen and check to avoid zooming out too much
+    _mapController.mapEventStream.listen((event) {
+      if(event.source == event.source){
+        print("event = "+event.toString());
+        if (_mapController.camera.zoom < (50-_currentMilesSliderValue)){
+          _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), (50-_currentMilesSliderValue));
+          setState(() {});
+        }
+      }
+    });
   }
 
 
   // [User Input States]
 
   Future<void> _moveMapToCurrentLocation() async {
-    _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+    _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentMilesSliderValue);
   }
 
   @override
@@ -110,7 +120,8 @@ class _MapMainPageState extends State<MapMainPage> {
                 mapController: _mapController,
                 options: MapOptions(
                   initialCenter: LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude),
-                  initialZoom: _currentSliderValue,
+                  initialZoom: _currentMilesSliderValue,
+                  // maxZoom: 10,//Does not appear to work
                   onPositionChanged: (MapCamera position, bool hasGesture) {
                     if (hasGesture) {
                       // setState(
@@ -123,10 +134,29 @@ class _MapMainPageState extends State<MapMainPage> {
                     // flags: (InteractiveFlag.pinchZoom | InteractiveFlag.drag),
                   ),
                 ),
+
                 children: [
                   TileLayer(
                     urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                     userAgentPackageName: 'com.example.app',
+                  ),
+                  CircleLayer(
+                    circles: [
+                      CircleMarker(//The infill
+                        point: AppData().currentLatLong,
+                        radius: _currentMilesSliderValue * 1609.344,
+                        color: Theme.of(context).colorScheme.secondary.withOpacity(0.15),
+                        useRadiusInMeter: true,
+                      ),
+                      CircleMarker(//The border
+                        point: AppData().currentLatLong,
+                        radius: _currentMilesSliderValue * 1609.344,
+                        color: Colors.white.withOpacity(0),
+                        borderColor: Theme.of(context).colorScheme.tertiary.withOpacity(0.25),
+                        borderStrokeWidth: 5,
+                        useRadiusInMeter: true,
+                      ),
+                    ],
                   ),
                   MarkerLayer(
                     markers: [
@@ -179,16 +209,16 @@ class _MapMainPageState extends State<MapMainPage> {
                           child: SizedBox(
                             width: 300,
                             child: Slider(
-                              value: _currentSliderValue,
-                              min: 6,
-                              max: 25,
-                              divisions: 14,
+                              value: _currentMilesSliderValue,
+                              min: 1,
+                              max: 50,
+                              // divisions: 1000,
                               // label: _currentSliderValue.round().toString(),
                               onChanged: (double value) {
                                 setState(() {
-                                  _currentSliderValue = value;
-                                  _mapController.move(
-                                      LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), _currentSliderValue);
+                                  _currentMilesSliderValue = value;
+                                  // _mapController.move(
+                                      // LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), pow(100-_currentMilesSliderValue,0.4).toDouble());
                                 });
                               },
                             ),
@@ -227,12 +257,12 @@ class _MapMainPageState extends State<MapMainPage> {
 
 
 
-                    return GestureDetector(
+                    return GestureDetector(  
                       onTap: () {
                         setState(() {
                           _selectedMarker = _cachedListLocalLocations[i];
-                          _currentSliderValue = max(_currentSliderValue, 14);
-                          _mapController.move(LatLng(_cachedListLocalLocations[i].latitude, _cachedListLocalLocations[i].longitude), _currentSliderValue);
+                          _currentMilesSliderValue = max(_currentMilesSliderValue, 14);
+                          _mapController.move(LatLng(_cachedListLocalLocations[i].latitude, _cachedListLocalLocations[i].longitude), _currentMilesSliderValue);
                         });
                         print("_selectedMarker.id ${_selectedMarker?.id}");
                       },
