@@ -230,6 +230,20 @@ class _MapMainPageState extends State<MapMainPage> {
                 ],
               ),
             ),
+            SizedBox(
+              height: 50,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: LocationLabel.values.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 4.0),
+                    child: _LabelChip(labelEnum:LocationLabel.values[index]),
+                  );
+                },
+              ),
+            ),
+
             AnimatedSize(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,
@@ -255,9 +269,7 @@ class _MapMainPageState extends State<MapMainPage> {
                     );
                     _cachedListLocalLocations.sort((a, b) => relativeDistance.compareTo(relativeDistance));
 
-
-
-                    return GestureDetector(  
+                    return GestureDetector(
                       onTap: () {
                         setState(() {
                           _selectedMarker = _cachedListLocalLocations[i];
@@ -377,6 +389,20 @@ class _LocalLocationCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _LabelChip extends StatelessWidget {
+  const _LabelChip({required this.labelEnum});
+
+  final LocationLabel labelEnum;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      avatar: Icon(labelEnum.icon, color: Theme.of(context).colorScheme.secondary),
+      label: Text(labelEnum.title),
     );
   }
 }
