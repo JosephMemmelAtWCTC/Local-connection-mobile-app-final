@@ -30,7 +30,7 @@ class NetworkRequestsHelper{
       //   throw Exception('Failed to post data');
       // }
     } catch (e) {
-      throw Exception('Failed to post data ${e}');
+      throw Exception('Failed to post data $e');
       // setState(() {
       //   result = 'Error: $e';
       // });
@@ -47,7 +47,7 @@ class NetworkRequestsHelper{
       );
       return response;
     } catch (e) {
-      throw Exception('Failed to get data for request with the url "${apiUrl}" - ${e.toString()}');
+      throw Exception('Failed to get data for request with the url "$apiUrl" - ${e.toString()}');
     }
   }
 

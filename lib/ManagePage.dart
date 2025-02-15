@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
@@ -40,7 +38,7 @@ class _ManagePageState extends State<ManagePage> {
   final _descriptionController = TextEditingController();
   DateTime? _startDate;
   DateTime? _endDate;
-  List<String> _selectedTags = [];
+  final List<String> _selectedTags = [];
 
   void _handleRadioTap(int? index) {
     if (index != null) {
@@ -53,7 +51,7 @@ class _ManagePageState extends State<ManagePage> {
   // [User Input States]
   final List<bool> _enabled = [false, true];  // List<bool> _selections = List.generate(2, (_) => false);
 
-  LocalLocation _localLocation = new LocalLocation(
+  LocalLocation _localLocation = LocalLocation(
     id: 0,
     enabled: false,
     locationNickname: "Test",
@@ -301,7 +299,7 @@ class _ManagePageState extends State<ManagePage> {
                             final locationLabel = LocationLabel.values[index];
                             return GestureDetector(
                               onTap: () {
-                                print("______ ${index}");
+                                print("______ $index");
                                 setState(() {
                                   _radioGroupValue = index;
                                 });
@@ -347,7 +345,7 @@ class _ManagePageState extends State<ManagePage> {
                               _titleController.text = "";
                               _descriptionController.text = "";
                               _radioGroupValue = 0;
-                              _localLocation = new LocalLocation(
+                              _localLocation = LocalLocation(
                                 id: 0,
                                 enabled: false,
                                 locationNickname: "Test",

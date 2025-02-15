@@ -48,7 +48,7 @@ class LoggedInUser {
         expiresIn = responseData["expiresIn"];
         refreshToken = responseData["refreshToken"];
 
-        Timer(new Duration(seconds: expiresIn!-60), scheduleLoginRefresh);
+        Timer(Duration(seconds: expiresIn!-60), scheduleLoginRefresh);
       }else{
         logout();
       }

@@ -83,7 +83,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         destinations: <Widget>[
           const NavigationDestination(
             // icon: Badge(child: Icon(Icons.map)),
-            icon: const Icon(Icons.map),
+            icon: Icon(Icons.map),
             label: 'Local',
           ),
           // if(AppData().loggedInUser.isLoggedIn)
@@ -91,7 +91,7 @@ class _NavigationExampleState extends State<NavigationExample> {
             // icon: Badge(
               // label: Text('2'),
               // child:
-            icon: const Icon(Icons.edit),
+            icon: Icon(Icons.edit),
             // ),
             label: 'Post',
           ),

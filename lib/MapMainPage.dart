@@ -75,15 +75,15 @@ class _MapMainPageState extends State<MapMainPage> {
     } as FutureOr Function(List<LocalLocation> localLocations));
 
     // Listen and check to avoid zooming out too much
-    _mapController.mapEventStream.listen((event) {
-      if(event.source == event.source){
-        print("event = "+event.toString());
-        if (_mapController.camera.zoom < (50-_currentMilesSliderValue)){
-          _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), (50-_currentMilesSliderValue));
-          setState(() {});
-        }
-      }
-    });
+    // _mapController.mapEventStream.listen((event) {
+    //   if(event.source == event.source){
+    //     print("event = $event");
+    //     if (_mapController.camera.zoom < (50-_currentMilesSliderValue)){
+    //       _mapController.move(LatLng(AppData().currentUserPosition.latitude, AppData().currentUserPosition.longitude), (50-_currentMilesSliderValue));
+    //       setState(() {});
+    //     }
+    //   }
+    // });
   }
 
 
@@ -211,7 +211,7 @@ class _MapMainPageState extends State<MapMainPage> {
                             child: Slider(
                               value: _currentMilesSliderValue,
                               min: 1,
-                              max: 50,
+                              max: 25,
                               // divisions: 1000,
                               // label: _currentSliderValue.round().toString(),
                               onChanged: (double value) {
@@ -262,7 +262,7 @@ class _MapMainPageState extends State<MapMainPage> {
                         setState(() {
                           _selectedMarker = _cachedListLocalLocations[i];
                           _currentMilesSliderValue = max(_currentMilesSliderValue, 14);
-                          _mapController.move(LatLng(_cachedListLocalLocations[i].latitude, _cachedListLocalLocations[i].longitude), _currentMilesSliderValue);
+                          _mapController.move(LatLng(_cachedListLocalLocations[i].latitude, _cachedListLocalLocations[i].longitude), 15);
                         });
                         print("_selectedMarker.id ${_selectedMarker?.id}");
                       },
