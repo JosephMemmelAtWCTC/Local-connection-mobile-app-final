@@ -393,16 +393,43 @@ class _LocalLocationCard extends StatelessWidget {
   }
 }
 
-class _LabelChip extends StatelessWidget {
-  const _LabelChip({required this.labelEnum});
+class _LabelChip extends StatefulWidget {
+  const _LabelChip({required this.labelEnum, this.enabled = true});
 
   final LocationLabel labelEnum;
+  final bool enabled;
+
+  @override
+  State<_LabelChip> createState() => _LabelChipState();
+}
+
+class _LabelChipState extends State<_LabelChip> {
+  late bool _enabled;
+
+  @override
+  void initState() {
+    super.initState();
+    _enabled = widget.enabled;
+  }
+
+  void _toggleEnabled() {
+    setState(() {
+      _enabled = !_enabled;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      avatar: Icon(labelEnum.icon, color: Theme.of(context).colorScheme.secondary),
-      label: Text(labelEnum.title),
+    return GestureDetector(
+      onTap: _toggleEnabled,
+      child: Chip(
+        avatar: Icon(
+          widget.labelEnum.icon,
+          color: _enabled ? Theme.of(context).colorScheme.secondary : Colors.grey,
+        ),
+        label: Text(widget.labelEnum.title),
+        backgroundColor: _enabled ? Theme.of(context).colorScheme.primaryContainer : Colors.grey[300],
+      ),
     );
   }
 }
